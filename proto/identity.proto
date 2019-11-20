@@ -1,0 +1,193 @@
+syntax = "proto3";
+
+option go_package = "identity_proto";
+
+package api.themakers.identity;
+
+////////////////////////////////////////////////////////////////
+////
+////
+service Identity {
+    rpc ListSupportedIdentitiesAndVerifiers (ListSupportedIdentitiesAndVerifiersReq) returns (VerifierDetailsResp);
+
+    rpc CheckStatus (StatusReq) returns (Status);
+
+    rpc Logout (LogoutReq) returns (Status);
+
+    rpc UserMerge (UserMergeReq) returns (UserMergeResp);
+
+    ////////////////////////////////////////////////////////////////
+    //// Starting authentication process
+    //
+    // This methods can be called only when no authentication process is active.
+    // This methods will create authentication process
+    //
+
+    //> Only applicable to unauthenticated requests
+    //  Will NOT create/modify any new user record
+    //  As result of successful authentication
+    //    existing user will be signed in
+    rpc StartSignIn(StartSignInReq) returns (Status);
+
+    //> Only applicable to unauthenticated requests
+    //  WILL create new user record; Can only use new (unregistered) identities
+    //  As result of successful authentication
+    //    new user will be created
+    //    or existing user will be signed in
+    rpc StartSignUp (StartSignUpReq) returns (Status);
+
+    //> Only applicable to authenticated requests
+    //  Will add new verifier/identity to existing user
+    //  As result of successful authentication
+    //    new identity/verifier will be added to existing user
+    rpc StartAttach (StartAttachReq) returns (Status);
+
+    ////////////////////////////////////////////////////////////////
+    //// Working within authentication process
+    //
+    // This methods can be called only when there is an active authentication process
+    //
+    rpc CancelAuthentication (CancelAuthenticationReq) returns (Status);
+
+
+    // Applicable on authenticated requests or on requests with active authentication process with
+    // at least one factor passed
+    rpc ListMyIdentitiesAndVerifiers (ListMyIdentitiesAndVerifiersReq) returns (ListMyIdentitiesAndVerifiersResp);
+
+    rpc Start (StartReq) returns (StartResp);
+
+    rpc Verify (VerifyReq) returns (Status);
+
+}
+
+////////////////////////////////////////////////////////////////
+////
+////
+
+message StartSignInReq {}
+
+message StartSignUpReq {}
+
+message StartAttachReq {}
+
+////////////////////////////////////////////////////////////////
+////
+////
+
+//// ListMessages
+message ListSupportedIdentitiesAndVerifiersReq {}
+message ListMyIdentitiesAndVerifiersReq {}
+
+message VerifierDetailsResp {
+    repeated string IdentitiyNames = 1;
+    repeated VerifierDetails Verifiers = 2;
+}
+message VerifierDetails {
+    string Name = 1;
+    string IdentityName = 2;
+
+    bool SupportRegular = 3;
+    bool SupportReverse = 4;
+    bool SupportOAuth2 = 5;
+    bool SupportStatic = 6;
+}
+
+message ListMyIdentitiesAndVerifiersResp {
+    repeated IdentityData Identities = 1;
+    repeated string Verifiers = 2;
+}
+
+message IdentityData {
+    string Name = 1;
+    string Identity = 2;
+}
+
+message StartReq {
+    string VerifierName = 1;
+    string IdentityName = 2;
+    string Identity = 3;
+    map<string, string> Args = 4;
+
+    map<string, string> Values = 5;
+}
+message StartResp {
+    map<string, string> Directions = 3;
+}
+
+message StatusReq {}
+
+message Status {
+    string Token = 1;
+    StatusAuthenticating Authenticating = 2;
+    StatusAuthenticated Authenticated = 3;
+}
+
+message StatusAuthenticated {
+    string User = 1;
+}
+
+message StatusAuthenticating {
+    oneof Objective {
+        bool SignIn = 1;
+        bool SignUp = 2;
+        bool Attach = 3;
+    }
+
+    repeated StatusCompletedFactors CompletedFactors = 4;
+
+    int64 RemainingFactors = 5;
+}
+
+message StatusCompletedFactors {
+    string VerifierName = 1;
+    string IdentityName = 2;
+    string Identity = 3;
+}
+
+message UserMergeReq {
+}
+
+message UserMergeResp {
+}
+
+message CancelAuthenticationReq {}
+
+message LogoutReq {
+    bool AllSessions = 1;
+}
+
+message InitializeStaticVerifierReq {
+    string VerifierName = 1;
+    map<string, string> Args = 2;
+}
+message InitializeStaticVerifierResp{
+    map<string, string> Result = 1;
+}
+
+message VerifyReq {
+    string VerifierName = 1;
+    string VerificationCode = 2;
+    string IdentityName = 3;
+    string Identity = 4;
+}
+
+
+////////////////////////////////////////////////////////////////
+//// Private service
+////
+service IdentityPrivate {
+    rpc LoginAs(LoginAsReq) returns (LoginAsResp);
+
+    // TODO
+    // rpc GetLastVerificationTime() returns ();
+}
+
+message LoginAsReq {
+    string User = 1;
+}
+
+message LoginAsResp {
+    string Session = 1;
+    string User = 2;
+    string Error = 3;
+}
