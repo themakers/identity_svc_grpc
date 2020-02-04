@@ -124,7 +124,7 @@ func (pis *PublicIdentityService) CheckStatus(ctx context.Context, r *identity_p
 func (pis *PublicIdentityService) StartSignIn(ctx context.Context, req *identity_proto.StartSignInReq) (*identity_proto.Status, error) {
 	sess := pis.is.sessionObtain(ctx)
 
-	if _, uid := sess.Info();  uid != "" {
+	if _, uid := sess.Info(); uid != "" {
 		return &identity_proto.Status{}, errors.New("should be unauthenticated")
 	}
 
@@ -233,12 +233,12 @@ func (pis *PublicIdentityService) Verify(ctx context.Context, q *identity_proto.
 func (pis *PublicIdentityService) Logout(ctx context.Context, q *identity_proto.LogoutReq) (*identity_proto.Status, error) {
 	sess := pis.is.sessionObtain(ctx)
 
-	// TODO Also delete Authentication on logout
+	stat, err := sess.Logout(ctx)
+	if err != nil {
+		return &identity_proto.Status{}, err
+	}
 
-	// TODO
-	panic("not implemented")
-
-	return pis.status(ctx, sess)
+	return convertStatus(*stat), nil
 }
 
 func (pis *PublicIdentityService) UserMerge(ctx context.Context, q *identity_proto.UserMergeReq) (*identity_proto.UserMergeResp, error) {
