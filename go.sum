@@ -141,8 +141,6 @@ github.com/themakers/foundation v0.0.0-20201106093627-26a44635e468 h1:dzoh1SIpmB
 github.com/themakers/foundation v0.0.0-20201106093627-26a44635e468/go.mod h1:SYLY7r2IrshykjKgOhrU81xoOUgCaqgh5gkYMoKjuM8=
 github.com/themakers/identity v0.0.0-20200703212242-9142bb6b35e1 h1:DuzLgIqC0AxW3Gy+Mhwn15R9KvFe8nifO6Pbe3j07Ng=
 github.com/themakers/identity v0.0.0-20200703212242-9142bb6b35e1/go.mod h1:lHYuLs7VL+KVZpEzfXnrv8YwlGXcuZgUZjV5pSRb+Fc=
-github.com/themakers/identity_svc_grpc v0.0.0-20200204133652-7e6af03bf130 h1:Cd5mafChk2YiUbdraHAm7ddSbE5BXpb20iUXra6ldRk=
-github.com/themakers/identity_svc_grpc v0.0.0-20200204133652-7e6af03bf130/go.mod h1:fWbNpvDn/AjLTNlB+B5Kf9LTGHhAlDW5uyHpCb3Hh3I=
 github.com/tidwall/pretty v1.0.0 h1:HsD+QiTn7sK6flMKIvNmpqz1qrpP3Ps6jOKIKMooyg4=
 github.com/tidwall/pretty v1.0.0/go.mod h1:XNkn88O1ChpSDQmQeStsy+sBenx6DDtFZJxhVysOjyk=
 github.com/xdg-go/pbkdf2 v1.0.0 h1:Su7DPu48wXMwC3bs7MCNG+z4FhcyEuz5dlvchbq0B0c=

@@ -1,4 +1,4 @@
-module identity_svc_grpc
+module github.com/themakers/identity_svc_grpc
 
 go 1.15
 
